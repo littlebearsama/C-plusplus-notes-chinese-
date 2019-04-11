@@ -53,10 +53,10 @@ private:
 3.派生类构造函数应初始化新增的数据成员。
 注意：可以通过初始化列表语法知名指明要使用的基类构造函数，否则使用默认的基类构造函数。派生类对象过期时，程序**将首先调用派生类的析构函数，然后在调用基类的析构函数**。
 ```
-*RetedPlayer::RetedPlayer(unsigned int r,const string & fn,const string &ln, bool ht)//:TableTennisPlayer()
-*{
-*rating = r;
-*}
+RetedPlayer::RetedPlayer(unsigned int r,const string & fn,const string &ln, bool ht)//:TableTennisPlayer()等价于调用默认构造函数
+{
+rating = r;
+}
 ```
 ## 虚方法
 * 经常在基类中将派生类会重新定义的方法声明为**虚方法**。方法在基类中被声明为虚的后。它在派生类中将**自动生成**虚方法。然而，在派生类中使用关键字virtual来指出哪些函数是虚函数也不失为一个好方法。
