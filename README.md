@@ -209,7 +209,8 @@ Student(const char *str,const double *pd,int n):std::string(str),std::valarry<do
 }
 ```
 * 2.访问基类的方法
-> a.包含书用对象（**对象名**）来调用方法 <
+> a.包含书用对象（**对象名**）来调用方法
+
 > b.私有继承时，**将使用类名和作用域解析运算符来调用方法**
 ```
 double Student::Average() const
@@ -223,6 +224,7 @@ else
 * 3.访问基类对象
 使用私有继承时，该string对象没有名称。**那么，student类的代码如何访问内部string对象呢？** **强制类型转换!**
 > **本来**子到父自动类型提升,不需要强制类型转换。父到子才需要强制类型转换。**但是**todo，下面是强制类型转换
+
 > 由于Student类是从string类派生而来的，因此可以通过强制类型转换，将Student对象转换为S=string对象
 ```
 //成员方法：打印出学生的名字
