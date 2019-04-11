@@ -209,7 +209,7 @@ Student(const char *str,const double *pd,int n):std::string(str),std::valarry<do
 }
 ```
 * 2.访问基类的方法
-> a.包含书用对象（**对象名**）来调用方法
+> a.包含书用对象（**对象名**）来调用方法 <
 > b.私有继承时，**将使用类名和作用域解析运算符来调用方法**
 ```
 double Student::Average() const
