@@ -290,15 +290,28 @@ public:
 //using声明只使用成员名---没有圆括号，函数特征表和返回类型
 ## 多重继承
 必须使用关键字public来限定每一个基类，这是因为，除非特别指出，否则编译器将认为是私有派生。（class 默认访问类型是私有，strcut默认访问类型是公有）
-* 多重继承带来的两个主要问题：
->1.从两个**不同的基类**继承**同名方法**。
+### 多重继承带来的两个主要问题：
+* 1.从两个**不同的基类**继承**同名方法**。
 ```
 class Singer:public Worker{...};
 class Waiter:public Worker{...};
 class SingerWaiter:public Singer,public Waiter{...};
 ```
 * Singer和Waiter都继承一个Worker组件，因此SingerWaiter将包含**两份Worker的拷贝**-->通常可以将派生来对象的地址赋给基类指针，但是现在将出现二义性。（基类指针调用基类方法时不知道调用哪个基类方法）
->2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
+* 2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
+### 虚基类（virtual base class）
+* 虚基类使得从多个类（他们的基类相同）派生出的对象只继承一个基类对象。
+```
+class Singer:virtual public Worker{...};//virtual可以和public调换位置
+class Waiter:public virtual Worker{...;
+//然后将SingingWaiter定义为
+class SingingWaiter：public Singer,public Waiter{...};
+```
+> 现在,SingingWaiter对象只包含Worker对象的一个副本
+### 为什么不抛弃将基类声明为虚的这种方式，使虚行为成为MI的准则呢？（为什么不讲虚行为设为默认，而要手动设置）
+> * 第一，一些情况下，可能需要基类的多个拷贝；
+> * 第二，将基类作为虚的要求程序完成额外的计算，为不需要的工具付出代价是不应当的；
+> * 第三，这样做是有缺点的，**为了使虚基类能够工作，需要对C++规则进行调整，必须以不同的方式编写一些代码。另外，使用虚基类还可能需要修改已有的代码**
 
 ## 类模板
 
