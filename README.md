@@ -313,7 +313,7 @@ class SingingWaiter：public Singer,public Waiter{...};
 > * 第一，一些情况下，可能需要基类的多个拷贝；
 > * 第二，将基类作为虚的要求程序完成额外的计算，为不需要的工具付出代价是不应当的；
 > * 第三，这样做是有缺点的，**为了使虚基类能够工作，需要对C++规则进行调整，必须以不同的方式编写一些代码。另外，使用虚基类还可能需要修改已有的代码**
-### 虚基类的构造函数
+### 虚基类的构造函数（需要修改）
 > * 对于非虚基类，唯一可以出现在初始化列表的构造函数是即是基类构造函数。
 > * 对于虚基类，需要对类构造函数采用一种新的方法。
 * **基类是虚的时候,禁止信息通过中间类自动传递给基类**,因此向下面构造函数将初始化成员panache和voice，但wk参数中的信息将不会传递给子对象Waiter。然而，**编译器必须在构造派生对象之前构造基类对象组件；**在下面情况下，编译器将使用Worker的默认构造函数（**即类型为Worker的参数没有用！而且调用了Worker的默认构造函数**）
@@ -324,10 +324,34 @@ SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Waiter(wk,p),Singer(w
 ```
 SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Worker(wk),Waiter(wk,p),Singer(wk,v){}
 ```
-* 上述代码将显式地调用构造函数worker(const Worker&)。请注意，这种调用是合法的，**对于虚基类，必须这样做；但对于非虚基类，则是非法的。**
+* 上述代码将**显式地调用构造函数**worker(const Worker&)。请注意，这种调用是合法的，**对于虚基类，必须这样做；但对于非虚基类，则是非法的。**
 ### 有关MI的问题
+* 多重继承可能导致函数调用的二义性。
+> 假如每个祖先（Singer，waiter）都有Show()函数。那么如何调用
+> * 1.可以使用作用域解析符来澄清编程者的意图：
+```
+SingingWaiter newhire("Elise Hawks",2005,6,soprano);
+newhire.Singer::Show();//using Singer Version
+```
+> * 2.然而，更好的方法是在SingingWaiter中重新定义Show(),并指出要使用哪个show。
+```
+P559～P560
+```
 #### 1.混合使用虚基类和非虚基类
-
+* 如果基类是虚基类，派生类将包含基类的一个子对象；
+* 如果基类不是虚基类，派生类将包含多个子对象
+* 当虚基类和非虚基类混合是，情况将如何呢？
+```
+//有下面情况
+class C:virtual public B{...};//B为虚基类
+class D:virtual public B{...};//B为虚基类
+class X: public B{...};       //B为非虚基类
+class Y: public B{...};       //B为非虚基类
+class M:public C,public D,public X,public Y{...};
+```
+> 这种情况下，类M从虚派生祖先C和D那里**共继承了一个B类子对象**，并从每一个非虚派生祖先X和Y**分别继承了一个B类子对象**。
+> 因此它包含三个B类子对象。
+> 当类通过多条虚途径和非虚途径继承了某个特定的基类是，该类包含**一个**表示所有的虚途径的基类子对象和分别表示各条非虚途径的多个基类子对象。
 #### 2.虚基类和支配
 
 ### MI小结
