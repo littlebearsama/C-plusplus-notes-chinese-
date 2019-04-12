@@ -297,7 +297,7 @@ class Singer:public Worker{...};
 class Waiter:public Worker{...};
 class SingerWaiter:public Singer,public Waiter{...};
 ```
-
+* Singer和Waiter都继承一个Worker组件，因此SingerWaiter将包含**两份Worker的拷贝**-->通常可以将派生来对象的地址赋给基类指针，但是现在将出现二义性。（基类指针调用基类方法时不知道调用哪个基类方法）
 >2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
 
 ## 类模板
