@@ -325,6 +325,12 @@ SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Waiter(wk,p),Singer(w
 SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Worker(wk),Waiter(wk,p),Singer(wk,v){}
 ```
 * 上述代码将显式地调用构造函数worker(const Worker&)。请注意，这种调用是合法的，**对于虚基类，必须这样做；但对于非虚基类，则是非法的。**
-### 
+### 有关MI的问题
+#### 1.混合使用虚基类和非虚基类
+
+#### 2.虚基类和支配
+
+### MI小结
+
 ## 类模板
 
