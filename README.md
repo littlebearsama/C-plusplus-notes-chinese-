@@ -292,13 +292,14 @@ public:
 必须使用关键字public来限定每一个基类，这是因为，除非特别指出，否则编译器将认为是私有派生。（class 默认访问类型是私有，strcut默认访问类型是公有）
 ### 多重继承带来的两个主要问题：
 * 1.从两个**不同的基类**继承**同名方法**。
+* 2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
 ```
 class Singer:public Worker{...};
 class Waiter:public Worker{...};
 class SingerWaiter:public Singer,public Waiter{...};
 ```
-* Singer和Waiter都继承一个Worker组件，因此SingerWaiter将包含**两份Worker的拷贝**-->通常可以将派生来对象的地址赋给基类指针，但是现在将出现二义性。（基类指针调用基类方法时不知道调用哪个基类方法）
-* 2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
+* Singer和Waiter都继承一个Worker组件，因此SingerWaiter将包含**两份Worker的拷贝**-->通常可以将派生来对象的地址赋给基类指针，但是现在将出现二义性。（基类指针调用基类方法时不知道调用哪个基类方法），第二个问题：比如worker类中有一个对象成员，那么就会出现
+
 ### 虚基类（virtual base class）
 * 虚基类使得从多个类（他们的基类相同）派生出的对象只继承一个基类对象。
 ```
@@ -312,6 +313,18 @@ class SingingWaiter：public Singer,public Waiter{...};
 > * 第一，一些情况下，可能需要基类的多个拷贝；
 > * 第二，将基类作为虚的要求程序完成额外的计算，为不需要的工具付出代价是不应当的；
 > * 第三，这样做是有缺点的，**为了使虚基类能够工作，需要对C++规则进行调整，必须以不同的方式编写一些代码。另外，使用虚基类还可能需要修改已有的代码**
-
+### 虚基类的构造函数
+> * 对于非虚基类，唯一可以出现在初始化列表的构造函数是即是基类构造函数。
+> * 对于虚基类，需要对类构造函数采用一种新的方法。
+* **基类是虚的时候,禁止信息通过中间类自动传递给基类**,因此向下面构造函数将初始化成员panache和voice，但wk参数中的信息将不会传递给子对象Waiter。然而，**编译器必须在构造派生对象之前构造基类对象组件；**在下面情况下，编译器将使用Worker的默认构造函数（**即类型为Worker的参数没有用！而且调用了Worker的默认构造函数**）
+```
+SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Waiter(wk,p),Singer(wk,v){}//flawed
+```
+* 如果不希望**默认构造函数来构造虚基类对象**，则需要显式地调用所需的基类构造函数。
+```
+SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Worker(wk),Waiter(wk,p),Singer(wk,v){}
+```
+* 上述代码将显式地调用构造函数worker(const Worker&)。请注意，这种调用是合法的，**对于虚基类，必须这样做；但对于非虚基类，则是非法的。**
+### 
 ## 类模板
 
