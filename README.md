@@ -292,6 +292,12 @@ public:
 必须使用关键字public来限定每一个基类，这是因为，除非特别指出，否则编译器将认为是私有派生。（class 默认访问类型是私有，strcut默认访问类型是公有）
 * 多重继承带来的两个主要问题：
 >1.从两个**不同的基类**继承**同名方法**。
+```
+class Singer:public Worker{...};
+class Waiter:public Worker{...};
+class SingerWaiter:public Singer,public Waiter{...};
+```
+
 >2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
 
 ## 类模板
