@@ -285,6 +285,8 @@ public:
   using std::valarray<double>::max;
 }
 ```
+//using声明只适用于继承，而不适用于包含
+//using声明只使用成员名---没有圆括号，函数特征表和返回类型
 ## 多重继承
 
 ## 类模板
