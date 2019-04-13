@@ -393,4 +393,61 @@ class F: public D,public E
 
 
 ## 类模板
-
+### 类模板
+* 类模板和模板函数都是以template开头（当然也可以使用class），后跟类型参数；类型参数不能为空，多个类型参数用逗号隔开。
+```
+template <typename 类型参数1，typename 类型参数2，typename 类型参数3>class 类名
+{
+//TODO
+}
+```
+* 类模板中定义的类型参数可以用在**函数声明和函数定义中**，
+* 类模板中定义的类型参数可以用在**类型类声明和类实现中**，
+* 类模板的目的同样是将数据的类型参数化。
+```
+template <class Type>
+class Stack
+{
+private:
+        enum {MAX=10};
+        Type items[MAX];
+        int top;
+public:
+        Stack();
+        ……
+}
+template <class Type>
+Stack<Type>::Stack()
+{
+        top=0;
+}
+```
+> * **Type**:泛型标识符，这里的type被称为类型参数。**这意味着它们类似于变量，但赋给它们的不是数字，而只能是类型**
+> * 相比于函数模板，类模板必须显式的提供所需的类型。
+* 模板不是函数，它们不能单独编译。模板必须与特定的**模板实例化(instantiation)**请求一起使用,为此，最简单的方法是将所有模板信息放在一个文件中，并在要使用这些模板的文件中包含该头文件。
+```
+//类声明Stack<int>将使用int替换模板中所有的Type
+Stack<int>kernels;
+Stack<string>colonels;
+```
+### 深入探讨模板
+### 模板具体化（instantiation）和实例化（specialization）
+> 模板以泛型的方式描述类，而具体化是使用具体的类型生成类声明。
+* 类模板具体化**生成类声明**
+* 类实例化**生成类对象**
+* 1.隐式实例化(implicit instantiation)
+> 他们声明一个或多个对象，指出所需的类型，而编译器使用通用模板提供的处方生成具体的类定义；
+```
+Array<int,100>stuff;//隐式实例化
+//在编译器处理对象之间，不会生成隐式实例化，如下
+Array<double,30>*pt;//a pointer,no object needed yet
+//下面语句导致编译器生成类定义，并根据该定义创建一个对象昂
+pt=new Array<double,30>;
+```
+* 2.显式实例化(explicit instantiation)
+**当使用关键字template并指出所需类型来声明类时，编译器将生成类声明的实例化**
+* 3.显式具体化
+* 4.部分具体化
+### 将模板用作参数
+### 模板类和友元
+### 模板别名(C++11)
