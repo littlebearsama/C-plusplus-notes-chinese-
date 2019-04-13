@@ -468,7 +468,7 @@ template<>class SortedArray<const char*>
 ...//details omitted
 };
 ```
-* 4.部分具体化(partical specialization)
+* 4.**部分具体化**(partical specialization)
 > 部分限制模板的通用性
 ```
 //general template 一般模板
