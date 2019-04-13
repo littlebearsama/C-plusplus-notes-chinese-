@@ -435,7 +435,7 @@ Stack<string>colonels;
 > 模板以泛型的方式描述类，而具体化是使用具体的类型生成类声明。
 * 类模板具体化**生成类声明**
 * 类实例化**生成类对象**
-* 1.隐式实例化(implicit instantiation)
+* 1.**隐式实例化(implicit instantiation)**
 > 他们声明一个或多个对象，指出所需的类型，而编译器使用通用模板提供的处方生成具体的类定义；
 ```
 Array<int,100>stuff;//隐式实例化
@@ -444,15 +444,39 @@ Array<double,30>*pt;//a pointer,no object needed yet
 //下面语句导致编译器生成类定义，并根据该定义创建一个对象昂
 pt=new Array<double,30>;
 ```
-* 2.显式实例化(explicit instantiation)
-**当使用关键字template并指出所需类型来声明类时，编译器将生成类声明的实例化**
+* 2.**显式实例化(explicit instantiation)**
+> 当使用关键字template并指出所需类型来声明类时，编译器将生成类声明的实例化
 ```
 template class ArrayTP<string,100>;
 ```
 > 这种情况下，虽然没有指出创建或提及类对象，编译器也将生成类声明（包含方法定义）。和隐式实例化也将根据通用模板来生成具体化。
-* 3.显式具体化(explicit specialization)---是特定类型（用于替换模板中的泛型）的定义
->
-* 4.部分具体化
+* 3.**显式具体化(explicit specialization)**---是特定类型（用于替换模板中的泛型）的定义
+> 格式：template<>class Classname<specialized-type-name>{...};
+> 有时候，可能需要在特殊类型实例化是，对模板进行修改，使其行为不同。在这种情况下，可以创建显式实例化。
+```
+//原来的类模板
+template <typename T>class sortedArray
+{
+...//details omitted
+};
+```
+> 当**具体化模板**和**通用模板**都与**实例化**请求匹配时，编译器将使用具体化版本。
+```
+//新的表示法提供一个专供const char*类型使用的SortedArray模板
+template<>class SortedArray<const char*>
+{
+...//details omitted
+};
+```
+* 4.部分具体化(partical specialization)
+> 部分限制模板的通用性
+```
+//general template 一般模板
+    template<class T1,class T2>class Pair{...};
+//specialization with T2 set to int部分具体化
+    template<class T1>class Pair<T1,int>{...};
+```
+* 
 ### 将模板用作参数
 ### 模板类和友元
 ### 模板别名(C++11)
