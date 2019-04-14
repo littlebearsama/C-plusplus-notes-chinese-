@@ -476,7 +476,29 @@ template<>class SortedArray<const char*>
 //specialization with T2 set to int部分具体化
     template<class T1>class Pair<T1,int>{...};
 ```
-* 
+> 如果有多个模板可供选择，编译器将使用具体化程度最高的模板
+```
+Pair<double,double>p1;//使用了一般的Pair类模板
+Pair<double,int>p2;//使用了部分具体化Pair<T1,int>
+Pair<int,int>p3//使用了显式实例化Pair<int,int>
+```
+> 也可以通过为**指针**提供特殊版本来部分具体化现有模板：
+```
+    template<class T>
+    class Feen{...};//一般版本的类模板
+    template<class T*>
+    class Feen{...};//部分具体化
+```
+
 ### 将模板用作参数
+`template<template<typename T>class Thing>class Crab`
 ### 模板类和友元
+> 模板类声明也可以有友元。模板的友元分为3类：
+* 非模板友元：
+* 约束(bound)模板友元，即友元的类型取决于类被实例化时的类型；
+* 非约束(unbund)模板友元，即友元的所有具体化都是类的每一个具体化的友元。
+#### 模板类的非模板友元
+
+#### 模板类的约束模板友元
+#### 模板类的非约束模板友元函数
 ### 模板别名(C++11)
