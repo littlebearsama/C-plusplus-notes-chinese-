@@ -24,7 +24,7 @@ C++笔记
 `默认的复制构造函数的功能--->逐个复制非静态成员（成员复制也叫浅复制,给两个对象的成员划上等号），复制的是成员的值；如果成员本身就是类对象，则将使用这个类的复制构造函数复制成员对象,静态成员变量不受影响，因为它们属于整个类，而不是各个对象`
 * 浅复制面对指针时会出现错误，在复制构造函数中浅复制的等价于sailor.len=sport.len;sailor.str=sport.str;前一个语句正确，后一个语句错误，因为成员char* str是指针，**得到的是指向同一字符串的指针！！！**
 * 当出现动态内存分配时，要定义一个现实复制构造函数--->进行深度复制(deep copy)
-```
+```C++
 StringBad::StringBad(const StringBad & st)
 {
 len=st.len;
@@ -92,7 +92,7 @@ return *this;
 ## 使用指向对象的指针
 `Class_name* ptr = new Class_name;`调用默认构造函数
 ### 定位new运算符/常规new运算符
-```
+```C++
 //使用new运算符创建一个512字节的内存缓冲区
 char* buffer =new char[512];//地址：(void*)buffer=00320AB0
 //创建两个指针；
@@ -113,14 +113,14 @@ delete pc4；//free heap2
 delete[] buffer//free buffer
 ```
 * 解决问题1，代码如下：
-```
+```C++
 pc1=new (buffer)JustTesting;
 pc3=new (buffer+sizeof(JustTesting))("Bad Idea",6);
 ```
 * 问题2：
 > 将delete用于pc2，pc4时，将自动调用为pc2和pc4指向的对象调用析构函数；问题2：然而，将的delete[]用于buffer时，**不会为使用定位new运算符创建的对象调用析构函数**
 * 解决问题2：显式调用析构函数
-```
+```C++
 pc3->~JustTesting;
 pc1->~JustTesting;
 ```
@@ -134,12 +134,12 @@ pc1->~JustTesting;
 ### a.内置类型的变量初始化
 如果定义变量时没有指定初始值，则变量被默认初始化。默认值由变量类型和定义变量的位置决定。
 * 如果是内置类型的变量未被显示初始化，它的值由定义位置决定。定义于任何函数体外的变量被初始化为0。
-```
+```C++
 //不在块中
 int i;//正确，i会被值初始化为0，也称为零初始化
 ```
 * 定义于函数体内部的内置类型变量将不被初始化（uninitialized）。一个未被初始化的内置类型变量的值是未定义的，如果试图拷贝或其他形式的访问此类型将引发错误
-```
+```C++
 1 {//在一个块中
 2 int i;//默认初始化，不可直接使用
 3 int j=0;//值初始化
@@ -151,7 +151,7 @@ int i;//正确，i会被值初始化为0，也称为零初始化
 由编译器提供的构造函数叫（合成的默认构造函数）。
 合成的默认构造函数将按照如下规则初始化类的数据成员。
 * 如果存在类内初始值（__C++11新特性__），用它来初始化成员。
-```
+```C++
 class CC
 {
 public:
@@ -167,7 +167,7 @@ private:
 * 对于简单数据成员，使用成员初始化列表和在函数体中使用复制没什么区别
 * **对于本身就是类对象的成员来说，使用成员初始化列表的效率更高**
 > 如果Classy是一个类，而mem1，mem2，mem3都是这个类的数据成员，则类构造函数可以使用如下的语法来初始化数据成员。
-```
+```C++
 Classy::Classy(int n,intm):mem1(n),mem2(0),men3(n*m+2)
 {
 //...
@@ -189,7 +189,7 @@ Classy::Classy(int n,intm):mem1(n),mem2(0),men3(n*m+2)
 2.派生类构造函数应通过成员初始化列表将基类信息传递给基类构造函数。
 3.派生类构造函数应初始化新增的数据成员。
 注意：可以通过初始化列表语法知名指明要使用的基类构造函数，否则使用默认的基类构造函数。派生类对象过期时，程序**将首先调用派生类的析构函数，然后在调用基类的析构函数**。
-```
+```C++
 RetedPlayer::RetedPlayer(unsigned int r,const string & fn,const string &ln, bool ht)//:TableTennisPlayer()等价于调用默认构造函数
 {
 rating = r;
@@ -237,7 +237,7 @@ c.对于每个函数调用，都需要执行一项额外的操作，到表中查
 * 5.**重新定义将隐藏方法**不会生成函数的两个重载版本，而是隐藏基类版本。如果派生类位于派生链中，则使用最新的虚函数版本，例外的情况是基类版本是隐藏的。总之，重新定义基本的方法并不是重载。如果重新定义派生类中的函数，将不只是使用相同的函数参数列表覆盖其基类声明，无论参数列表是否相同，该操作将隐藏所有的同名方法。
 ## 两条经验规则
 * 1.如果重新定义继承的方法，应确保与原来的原型完全相同，但是**如果返回类型是积累的引用或指针，则可以修改为指向派生类的引用或指针（只适用于返回值而不适用于参数）**，这种例外是新出现的。这种特性被称为**返回类型协变（convariance of return type）**，因此返回类型是随类类型变化的。
-```
+```C++
 //基类
 class Dwelling
 {
@@ -252,7 +252,7 @@ virtual Hovel & build(int n);
 }
 ```
 * 2.如果基类声明被重载了，则应该在派生类中重新定义所有基类版本。
-```
+```C++
 //基类
 class Dwelling
 {
@@ -274,7 +274,7 @@ virtual void showperks（        ）const；
 ```
 **如果只重新定义一个版本，则另外两个版本将被隐藏，派生类对象将无法使用它们，**
 注意，如果不需要修改，则新定义可知调用基类版本：
-```
+```C++
 void Hovel::showperk()const
 {
 Dwelling::showperks();
@@ -299,7 +299,7 @@ Dwelling::showperks();
 
 ### 抽象基类的作用
 * C++通过使用纯虚函数（pure virtual function）提供未实现的函数。纯虚函数声明的结尾处为=0，
-```
+```C++
 virtual double Area() const=0;//=0指出类是一个抽象基类，在类中可以不定义该函数 
 ```
 * 可以将ABC看作是一种必须的接口。ABC要求具体派生类覆盖其纯虚函数---迫使派生类遵顼ABC设置的接口规则。简单来说是：因为在派生类中必须重写纯虚函数，否则不能实例化该派生类。所以，派生类中必定会有重新定义的该函数的接口。
@@ -323,7 +323,7 @@ virtual double Area() const=0;//=0指出类是一个抽象基类，在类中可�
 基类的公有成员和保护成员都将成为派生类的私有成员。和公有继承一样，基类的私有成员是会被派生类继承但是不能被派生类访问。基类方法将不会成为派生类对象公有接口的一部分，但可以在派生类中使用它们。
 * 1.初始化基类组件
 >和包含不同，对于继承类的新版本的构造函数将使用成员初始化列表语法，它使用类名（std::string，std::valarry）而不是成员名来表示构造函数
-```
+```C++
 //Student类私有继承两个类派生而来,本来包含的时候两个基类分别是name和score
 class Student:private std::string,private std::valarry<double>
 {
@@ -343,7 +343,7 @@ Student(const char *str,const double *pd,int n):std::string(str),std::valarry<do
 > a.包含书用对象（**对象名**）来调用方法
 
 > b.私有继承时，**将使用类名和作用域解析运算符来调用方法**
-```
+```C++
 double Student::Average() const
 {
 if(ArrayDb::size()>0）//ArrayDb typedef为std::valarry<double>
@@ -358,7 +358,7 @@ else
 > **本来**子到父自动类型提升,不需要强制类型转换。父到子才需要强制类型转换。**但是**下面是强制类型转换，原因在第4点那里写着。
 
 > 由于Student类是从string类派生而来的，因此可以通过强制类型转换，将Student对象转换为S=string对象
-```
+```C++
 //成员方法：打印出学生的名字
 //因为不是包含，只能通过强制类型转换
 const string & Student::Name()const
@@ -371,7 +371,7 @@ retrun (const string &) *this;
 用类名显式地限定函数名不适合友元函数，**因为友元不属于类**。不能通过这种方法访问基类。
 
 解决：**通过显示地转换为基类来调用正确的函数**
-```
+```C++
 osstream & operator<<(ostream & os,const Student & stu)
 {
 os << "Score for "<<(const String &) stu <<":\n";//显式地将stu转换为string对象引用，进而调用基类方法
@@ -400,7 +400,7 @@ os << "Score for "<<(const String &) stu <<":\n";//显式地将stu转换为strin
 * 7.使用using重新定义访问权限
 使用派生或私有派生时，基类的公有成员将成为保护成员或私有成员，假设要让基类方法在派生类外面可用
 > * 方法1，定义一个使用该基类方法的派生类方法
-```
+```C++
 double Student::sum() const
 {
 return std::valarray<double>::sum();
@@ -423,7 +423,7 @@ public:
 ### 多重继承带来的两个主要问题：
 * 1.从两个**不同的基类**继承**同名方法**。
 * 2.从两个或更多相关的基类那里继承**同一个类的多个实例**。
-```
+```C++
 class Singer:public Worker{...};
 class Waiter:public Worker{...};
 class SingerWaiter:public Singer,public Waiter{...};
@@ -432,7 +432,7 @@ class SingerWaiter:public Singer,public Waiter{...};
 
 ### 虚基类（virtual base class）
 * 虚基类使得从多个类（他们的基类相同）派生出的对象只继承一个基类对象。
-```
+```C++
 class Singer:virtual public Worker{...};//virtual可以和public调换位置
 class Waiter:public virtual Worker{...;
 //然后将SingingWaiter定义为
@@ -447,11 +447,11 @@ class SingingWaiter：public Singer,public Waiter{...};
 > * 对于非虚基类，唯一可以出现在初始化列表的构造函数是即是基类构造函数。
 > * 对于虚基类，需要对类构造函数采用一种新的方法。
 * **基类是虚的时候,禁止信息通过中间类自动传递给基类**,因此向下面构造函数将初始化成员panache和voice，但wk参数中的信息将不会传递给子对象Waiter。然而，**编译器必须在构造派生对象之前构造基类对象组件；**在下面情况下，编译器将使用Worker的默认构造函数（**即类型为Worker的参数没有用！而且调用了Worker的默认构造函数**）
-```
+```C++
 SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Waiter(wk,p),Singer(wk,v){}//flawed
 ```
 * 如果不希望**默认构造函数来构造虚基类对象**，则需要显式地调用所需的基类构造函数。
-```
+```C++
 SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Worker(wk),Waiter(wk,p),Singer(wk,v){}
 ```
 * 上述代码将**显式地调用构造函数**worker(const Worker&)。请注意，这种调用是合法的，**对于虚基类，必须这样做；但对于非虚基类，则是非法的。**
@@ -459,7 +459,7 @@ SingingWaiter(const Worker &wk,int p=0;int v=Singer:other):Worker(wk),Waiter(wk,
 * 多重继承可能导致函数调用的二义性。
 > 假如每个祖先（Singer，waiter）都有Show()函数。那么如何调用
 > * 1.可以使用作用域解析符来澄清编程者的意图：
-```
+```C++
 SingingWaiter newhire("Elise Hawks",2005,6,soprano);
 newhire.Singer::Show();//using Singer Version
 ```
@@ -471,7 +471,7 @@ P559～P560
 * 如果基类是虚基类，派生类将包含基类的一个子对象；
 * 如果基类不是虚基类，派生类将包含多个子对象
 * 当虚基类和非虚基类混合是，情况将如何呢？
-```
+```C++
 //有下面情况
 class C:virtual public B{...};//B为虚基类
 class D:virtual public B{...};//B为虚基类
@@ -484,7 +484,7 @@ class M:public C,public D,public X,public Y{...};
 #### 2.虚基类和支配(使用虚基类将改变C++解释二义性的方式)
 * 使用非虚基类是，规则很简单，如果类从不同的类那里继承了两个或更多的同名函数（数据或方法），则使用该成员名是，如果没有用类名进行限定，将导致二义性。
 * 但如果使用的是虚基类，则这样做不一定会导致二义性。这种情况下，如果某个名称**优先于（dominates）**其他所有名称，则使用它时，即使不使用限定符，也不会导致二义性。
-```
+```C++
 class B
 {
 public:
@@ -525,7 +525,7 @@ class F: public D,public E
 ## 类模板
 ### 类模板
 * 类模板和模板函数都是以template开头（当然也可以使用class），后跟类型参数；类型参数不能为空，多个类型参数用逗号隔开。
-```
+```C++
 template <typename 类型参数1，typename 类型参数2，typename 类型参数3>class 类名
 {
 //TODO
@@ -534,7 +534,7 @@ template <typename 类型参数1，typename 类型参数2，typename 类型参�
 * 类模板中定义的类型参数可以用在**函数声明和函数定义中**，
 * 类模板中定义的类型参数可以用在**类型类声明和类实现中**，
 * 类模板的目的同样是将数据的类型参数化。
-```
+```C++
 template <class Type>
 class Stack
 {
@@ -555,7 +555,7 @@ Stack<Type>::Stack()
 > * **Type**:泛型标识符，这里的type被称为类型参数。**这意味着它们类似于变量，但赋给它们的不是数字，而只能是类型**
 > * 相比于函数模板，类模板必须显式的提供所需的类型。
 * 模板不是函数，它们不能单独编译。模板必须与特定的**模板实例化(instantiation)**请求一起使用,为此，最简单的方法是将所有模板信息放在一个文件中，并在要使用这些模板的文件中包含该头文件。
-```
+```C++
 //类声明Stack<int>将使用int替换模板中所有的Type
 Stack<int>kernels;
 Stack<string>colonels;
@@ -567,7 +567,7 @@ Stack<string>colonels;
 * 类实例化**生成类对象**
 * 1.**隐式实例化(implicit instantiation)**
 > 他们声明一个或多个对象，指出所需的类型，而编译器使用通用模板提供的处方生成具体的类定义；
-```
+```C++
 Array<int,100>stuff;//隐式实例化
 //在编译器处理对象之间，不会生成隐式实例化，如下
 Array<double,30>*pt;//a pointer,no object needed yet
@@ -576,14 +576,14 @@ pt=new Array<double,30>;
 ```
 * 2.**显式实例化(explicit instantiation)**
 > 当使用关键字template并指出所需类型来声明类时，编译器将生成类声明的实例化
-```
+```C++
 template class ArrayTP<string,100>;
 ```
 > 这种情况下，虽然没有指出创建或提及类对象，编译器也将生成类声明（包含方法定义）。和隐式实例化也将根据通用模板来生成具体化。
 * 3.**显式具体化(explicit specialization)**---是特定类型（用于替换模板中的泛型）的定义
 > 格式：template<>class Classname<specialized-type-name>{...};
 > 有时候，可能需要在特殊类型实例化是，对模板进行修改，使其行为不同。在这种情况下，可以创建显式实例化。
-```
+```C++
 //原来的类模板
 template <typename T>class sortedArray
 {
@@ -591,7 +591,7 @@ template <typename T>class sortedArray
 };
 ```
 > 当**具体化模板**和**通用模板**都与**实例化**请求匹配时，编译器将使用具体化版本。
-```
+```C++
 //新的表示法提供一个专供const char*类型使用的SortedArray模板
 template<>class SortedArray<const char*>
 {
@@ -600,20 +600,20 @@ template<>class SortedArray<const char*>
 ```
 * 4.**部分具体化(partical specialization)**
 > 部分限制模板的通用性
-```
+```C++
 //general template 一般模板
     template<class T1,class T2>class Pair{...};
 //specialization with T2 set to int部分具体化
     template<class T1>class Pair<T1,int>{...};
 ```
 > 如果有多个模板可供选择，编译器将使用具体化程度最高的模板
-```
+```C++
 Pair<double,double>p1;//使用了一般的Pair类模板
 Pair<double,int>p2;//使用了部分具体化Pair<T1,int>
 Pair<int,int>p3//使用了显式实例化Pair<int,int>
 ```
 > 也可以通过为**指针**提供特殊版本来部分具体化现有模板：
-```
+```C++
     template<class T>
     class Feen{...};//一般版本的类模板
     template<class T*>
@@ -629,7 +629,7 @@ Pair<int,int>p3//使用了显式实例化Pair<int,int>
 * 非约束(unbund)模板友元，即友元的所有具体化都是类的每一个具体化的友元。
 #### 模板类的非模板友元函数
 * 在模板类中奖一个常规函数声明为友元：
-```
+```C++
 template <class T>
 class HasFriend
 {
@@ -650,7 +650,7 @@ friend void counts();
 > template<typename T>void counts();
 > template<typename T>void report(T &);
 * 2.然后，在函数中再次将模板声明为友元。这些语句根据类模板参数的类型声明
-```
+```C++
     template<typename TT>
     class HasFriendT
     {
@@ -663,7 +663,7 @@ friend void counts();
     
 #### 模板类的非约束模板友元函数
 * 前一节中的约束模板友元函数在类外面声明的模板的具体化。int类具体化获得int函数具体化，依此类推。通过类内部声明模板，可以创建非约束友元函数，即每个函数具体化都是每个类具体化的友元。对于非约束友元，友元模板类型参数与模板类类型参数是不同的：
-```
+```C++
 template<typename T>
 class ManyFriend
 {
@@ -673,7 +673,7 @@ template<typename C,typename D>friend void show2(C &,D &);
 ```
 ### 模板别名(C++11)
 * 1.如果能为类型指定别名，浙江爱你个很方便，在模板设计中尤为如此。**可使用typedef为模板具体化指定别名**
-```
+```C++
 typedef std::array<double,12> arrd;
 typedef std::array<int,12> arri;
 typedef std::array<std::string,12> arrst;
@@ -683,18 +683,18 @@ arri days;
 arrst months;
 ```
 * 2.C++11新增了一项功能---**使用模板提供一系列别名**
-```
+```C++
 template<typename T>
 using arrtype=std::array<T,12>;//template aliases
 ```
 > 这将arrtype定义为一个模板别名，可以用它来指定类型
-```
+```C++
 arrtype<double> gallones;
 arrtype<int> days;
 arrtype<std::string> months;
 ```
 * C++11允许**将语法using=用于非模板**。用于非模板是，这种语法与常规typedef等价：
-```
+```C++
 typedef const char *pc1; //typedef syntax/ 常规typedef语法
 using pc2=const char*;   //using = syntax/ using =语法
 ```
