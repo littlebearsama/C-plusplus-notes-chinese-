@@ -36,7 +36,7 @@ std::strcpy(str,st.str);
 `原型：class_name & class_name::operator==(const class_name &);`接受并返回一个指向类对象的引用。
 > * 与复制构造函数相似，赋值运算符的隐式实现也对成员进行逐个复制
 * 解决：提供赋值运算符（进行深度复制）定义，其实现业余复制构造函数相似，但有一些差别
-```
+```C++
 //代码1：先申请内存，再delete
 CMyString& CMyString::operator=(const CMyString& str)
 {
