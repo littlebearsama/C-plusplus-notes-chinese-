@@ -121,7 +121,40 @@ return *this;
 * 2.其次，返回引用指向的对象因该在调用函数执行时存在。
 * 3.返回作为参数输入的常量引用，返回类型必须为const，这样才匹配。
 ## 使用指向对象的指针
-
+`Class_name* ptr = new Class_name;`调用默认构造函数
+### 定位new运算符/常规new运算符
+```
+//使用new运算符创建一个512字节的内存缓冲区
+char* buffer =new char[512];//地址：(void*)buffer=00320AB0
+//创建两个指针；
+JustTesting *pc1,*pc2;
+//给两个指针赋值
+pc1=new (buffer)JustTesting;//使用了new定位符，pc1指向的内存在缓冲区 地址：pc1=00320AB0
+pc2=new JustTesting("help",20);//使用了常规new运算符，pc2指向的内存在堆中
+//创建两个指针；
+JustTesting *pc3,*pc4;
+//给两个指针赋值
+pc3=new (buffer)JustTesting("Bad Idea",6);//使用了new定位符，pc3指向的内存在缓冲区 地址：pc3=00320AB0
+//创建时，定位new运算符使用一个新对象覆盖pc1指向的内存单元。
+//问题1：显然，如果类动态地为其成员分配内存，该内存还没有释放，成员就没了，这将引发问题。
+pc4=new JustTesting("help",10);//使用了常规new运算符，pc4指向的内存在堆中
+//释放内存
+delete pc2；//free heap1
+delete pc4；//free heap2
+delete[] buffer//free buffer
+```
+* 解决问题1，代码如下：
+```
+pc1=new (buffer)JustTesting;
+pc3=new (buffer+sizeof(JustTesting))("Bad Idea",6);
+```
+* 问题2：
+> 将delete用于pc2，pc4时，将自动调用为pc2和pc4指向的对象调用析构函数；问题2：然而，将的delete[]用于buffer时，**不会为使用定位new运算符创建的对象调用析构函数**
+* 解决问题2：显示调用析构函数
+```
+pc3->~JustTesting;
+pc1->~JustTesting;
+```
 
 # 13类继承
 ## 基类和派生类的特殊关系
