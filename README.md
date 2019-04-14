@@ -627,8 +627,77 @@ Pair<int,int>p3//使用了显式实例化Pair<int,int>
 * 非模板友元：
 * 约束(bound)模板友元，即友元的类型取决于类被实例化时的类型；
 * 非约束(unbund)模板友元，即友元的所有具体化都是类的每一个具体化的友元。
-#### 模板类的非模板友元
+#### 模板类的非模板友元函数
+* 在模板类中奖一个常规函数声明为友元：
+```
+template <class T>
+class HasFriend
+{
+public:
+friend void counts();
+...
+};
+```
+> 上述声明指定counts()函数称为模板所有实例化的友元
+* **counts()函数不是通过对象调用**（它是友元不是成员函数），也没有对象参数，那么如何访问HasFriend对象？
+> * 1.它可以访问全局对象
+> * 2.它可以使用全局指针访问非全局对象
+> * 3.可以创建自己的对象
+> * 4.可以访问独立于对象的模板类的静态成员函数
 
 #### 模板类的约束模板友元
+* 1.首先，在类定义的前面声明每个模板函数
+> template<typename T>void counts();
+> template<typename T>void report(T &);
+* 2.然后，在函数中再次将模板声明为友元。这些语句根据类模板参数的类型声明
+```
+    template<typename TT>
+    class HasFriendT
+    {
+    ...
+    friend coid counts<TT>();
+    friend coid report<>(HasFriendT<TT> &);
+    };
+```
+* 3.为友元提供模板定义
+    
 #### 模板类的非约束模板友元函数
+* 前一节中的约束模板友元函数在类外面声明的模板的具体化。int类具体化获得int函数具体化，依此类推。通过类内部声明模板，可以创建非约束友元函数，即每个函数具体化都是每个类具体化的友元。对于非约束友元，友元模板类型参数与模板类类型参数是不同的：
+```
+template<typename T>
+class ManyFriend
+{
+...
+template<typename C,typename D>friend void show2(C &,D &);
+};
+```
 ### 模板别名(C++11)
+* 1.如果能为类型指定别名，浙江爱你个很方便，在模板设计中尤为如此。**可使用typedef为模板具体化指定别名**
+```
+typedef std::array<double,12> arrd;
+typedef std::array<int,12> arri;
+typedef std::array<std::string,12> arrst;
+//使用
+arrd gallones；
+arri days;
+arrst months;
+```
+* 2.C++11新增了一项功能---**使用模板提供一系列别名**
+```
+template<typename T>
+using arrtype=std::array<T,12>;//template aliases
+```
+> 这将arrtype定义为一个模板别名，可以用它来指定类型
+```
+arrtype<double> gallones;
+arrtype<int> days;
+arrtype<std::string> months;
+```
+* C++11允许**将语法using=用于非模板**。用于非模板是，这种语法与常规typedef等价：
+```
+typedef const char *pc1; //typedef syntax/ 常规typedef语法
+using pc2=const char*;   //using = syntax/ using =语法
+```
+
+### 可变参数模板(variadic template)18章
+
