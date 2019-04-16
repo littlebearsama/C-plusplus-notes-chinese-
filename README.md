@@ -6,6 +6,7 @@ C++笔记
 
 ## 什么是重载（todo）
 
+***
 
 # 12类和动态内存分配
 * 动态内存和类
@@ -178,6 +179,8 @@ Classy::Classy(int n,intm):mem1(n),mem2(0),men3(n*m+2)
 * 3.必须用这种格式来初始化引用数据成员
 * 数据成员被初始化顺序与它们出现在类声明中的顺序相同，与初始化器中的排列顺序无关
 
+***
+
 # 13类继承
 ## 基类和派生类的特殊关系
 * 1.派生类对象可以使用非私有的基类方法
@@ -315,6 +318,7 @@ virtual double Area() const=0;//=0指出类是一个抽象基类，在类中可�
 * 只有当一个类被用来做基类的时候才会把析构函数写成虚函数。
 * 当基类和派生类都采用动态内存分配是，派生类的析构函数，复制构造函数，赋值运算符都必须使用相应的基类方法来处理基类
 
+***
 
 # 14C++中的代码重用（公有继承，包含对象的类，私有继承，多重继承，类模板）
 ## 包含（containment）：包含对象成员的类
@@ -700,4 +704,106 @@ using pc2=const char*;   //using = syntax/ using =语法
 ```
 
 ### 可变参数模板(variadic template)18章
+***
+# 15友元、异常和其他
+## 友元类
+例子：模拟电视机和遥控器的简单程序
+> 公有继承is-a关系并不适用。**遥控器可以改变电视机的状态，这表明应将Remove类作为TV类的一个友元**
+* 友元声明 friend class Remote；--->友元声明可以位于公有、私有或保护部分，其所在的位置无关紧要。该声明让整个类成为友元并不需要前向（实现）声明，因为友元语句本身已经指出Remote是一个类。
+* **友元Remove可以使用TV类的所有成员**
+* 大多类方法都被定义为内联。代码中，除构造函数外，所有Remove方法都将一个TV对象引用作为参数，这表明遥控器必须针对特定的电视机
+* 同一个遥控器可以控制不同的电视机
+```C++
+TV S42；
+TV S58(TV::ON);
+Remote grey;
+grey.set_chan(S42,10);
+grey.set_chan(S58,28);
+```
+## 友元成员函数
+* 某一个类的成员函数作为另外一个类的友元函数
+> 例子：将TV成员中Remote方法Remote::set_chan()，成为另外一个类的成员
+```C++
+class TV
+{
+friend void Remote::set_chan(TV& t,int c);
+...
+};
+```
+> * 问题1：在编译器在TV类声明中看到Remote的一个方法被声明为TV类的友元之前，应先看到Remote类的声明和set_chan()方法的声明。
+```C++
+//排列次序应如下：
+class TV;//forward declaration
+class Remote{...};
+class TV{...};
+```
+> * 问题2：Remote声明包含内联代码，例如：
+`void onoff(TV & t){t.onoff();}`
+> 由于这将调用TV的一个方法，所以编译器此时必须看到一个TV的类声明，解决：**使Remote声明中只包含方法声明，并将实际的定义放在TV类之后**
+```C++
+#include<iostream>
+   
+
+class B
+{
+public :
+    B()
+    {
+        myValue=2;
+        std::cout<<"B init"<<std::endl;
+    }
+    ~B()
+    {
+        std::cout<<"B end"<<std::endl;
+    }
+    
+    //这样做可以
+    /*B operator+(const B av)
+    {
+        B a;
+        a.myValue=myValue+av.myValue;
+        return a;
+    }*/
+    //也可以这么做
+    friend B operator+(const B b1,const B b2);
+
+    //------------------------------------------------
+    int GetMyValue()
+    {
+        return myValue;
+    }
+    //重载<<
+    friend std::ostream& operator<<(std::ostream& os,B);
+private :
+    int myValue;
+};
+
+B operator+(const B b1,const B b2)
+{
+    B a;
+    a.myValue=b1.myValue+b2.myValue;
+    return a;
+}
+std::ostream& operator<<(std::ostream& os,B b)
+{
+    return os<<"重载实现："<<b.myValue<<std::endl;
+}
+int main()
+{
+    B b1;
+    std::cout<<b1;
+    B b2;
+    B b3=b1+b2;
+    std::cout<<b3<<std::endl;
+    std::cin.get();
+    return 0;
+}
+```
+* 内联函数的链接性是内部的，这意味着函数定义必须在使用函数的文件中，这个例子中内联定义位于头文件中，因此在使用函数的文件中包含头文件可确保将定义放在正确的地方。这可以将定义放在实现文件中，**但必须删除关键字inline**这样函数的链接性将是外部的
+
+## 嵌套类
+## 异常
+## exception类
+## RTTI
+## 类型转换运算符
 
