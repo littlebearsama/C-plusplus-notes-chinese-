@@ -802,7 +802,144 @@ int main()
 * 内联函数的链接性是内部的，这意味着函数定义必须在使用函数的文件中，这个例子中内联定义位于头文件中，因此在使用函数的文件中包含头文件可确保将定义放在正确的地方。这可以将定义放在实现文件中，**但必须删除关键字inline**这样函数的链接性将是外部的
 
 ## 嵌套类
+* 在另外一个类中声明的类被称为嵌套类（nested class）
+* 包含类的成员函数可以创建和使用被嵌套的对象。而仅当声明位于公有部分，才能在包含类外面使用嵌套类，而且必须使用作用域解析运算符
+* 访问权限：嵌套类、结构和美剧的作用域特征（三者相同）
+
+| 声明位置 | 包含它的类是否可以使用它 | 从包含它的类派生而来的类是否可以使用它 |在外部是否可以使用 |
+| ------ | ------ | ------ |------ |
+| 私有部分 | 是 | 否 | 否 |
+| 保护部分 | 是 | 是 | 否 |
+| 公有部分 | 是 | 是 | 是，可以通过类限定符来使用 |
+* 访问控制
+> * 1.类声明的位置决定了类的作用域或可见性
+> * 2.类可见后，访问控制规则（公有，保护，私有，友元）将决定程序对嵌套类成员的访问权限。
+```C++
+//在下面的程序中，我们创建了一个模板类用于实现Queue容器的部分功能，并且在模板类中潜逃使用了一个Node类。
+// queuetp.h -- queue template with a nested class
+#ifndef QUEUETP_H_
+#define QUEUETP_H_
+
+template <class Item>
+class QueueTP
+{
+private:
+    enum {Q_SIZE = 10};
+    // Node is a nested class definition
+    class Node
+    {
+    public:
+        Item item;
+        Node * next;
+        Node(const Item & i) : item(i), next(0) {}
+    };
+    Node * front;       // pointer to front of Queue
+    Node * rear;        // pointer to rear of Queue
+    int items;          // current number of items in Queue
+    const int qsize;    // maximum number of items in Queue
+    QueueTP(const QueueTP & q) : qsize(0) {}
+    QueueTP & operator=(const QueueTP & q) { return *this; }
+public:
+    QueueTP(int qs = Q_SIZE);
+    ~QueueTP();
+    bool isempty() const
+    {
+        return items == 0;
+    }
+    bool isfull() const
+    {
+        return items == qsize;
+    }
+    int queuecount() const
+    {
+        return items;
+    }
+    bool enqueue(const Item &item); // add item to end
+    bool dequeue(Item &item);       // remove item from front
+};
+// QueueTP methods
+template <class Item>
+QueueTP<Item>::QueueTP(int qs) : qsize(qs)
+{
+    front = rear = 0;
+    items = 0;
+}
+
+template <class Item>
+QueueTP<Item>::~QueueTP()
+{
+    Node * temp;
+    while (front != 0)      // while queue is not yet empty
+    {
+        temp = front;
+        front = front->next;
+        delete temp;
+    }
+}
+
+// Add item to queue
+template <class Item>
+bool QueueTP<Item>::enqueue(const Item & item)
+{
+    if (isfull())
+        return false;
+    Node * add = new Node(item);    // create node
+    // on failure, new throws std::bad_alloc exception
+    items ++;
+    if (front == 0)             // if queue is empty
+        front = add;            // place item at front
+    else
+        rear->next = add;       // else place at rear
+    rear = add;
+    return true;
+}
+
+// Place front item into item variable and remove from queue
+template <class Item>
+bool QueueTP<Item>::dequeue(Item & item)
+{
+    if (front == 0)
+        return false;
+    item = front->item;         // set item to first item in queue
+    items --;
+    Node * temp = front;        // save location of first item
+    front = front->next;        // reset front to next item
+    delete temp;                // delete former first item
+    if (items == 0)
+        rear = 0;
+    return true;
+}
+
+#endif // QUEUETP_H_
+```
+
+
 ## 异常
+* 意外情况
+> 1.程序可能会试图打开一个不可用的文件
+> 2.请求过多内存
+> 3.遭遇不能容忍的值
+### 1.调用abort()--原型在cstdlib（或stdlib.h）中
+* 其典型实现是向标准错误流（即cerr使用的错误流）发送信息abnormalprogram termination（程序异常中止），然后终止程序。它返回一个随实现而异的值，告诉操作系统，处理失败。
+* 调用abort()将直接终止程序（调用时，不进行任何清理工作）
+* 使用方法：1.判断触发异常的条件 2.满足条件时调用abort()
+> * 1.exit():
+在调用时，会做大部分清理工作，但是决不会销毁局部对象，因为没有stack unwinding。
+会进行的清理工作包括：销毁所有static和global对象，清空所有缓冲区，关闭所有I／O通道。终止前会调用经由atexit()登录的函数，atexit如果抛出异常，则调用terminate()。
+
+> * 2.abort():调用时，不进行任何清理工作。直接终止程序。
+
+> * 3.retrun:调用时，进行stack unwinding，调用局部对象析构函数，清理局部对象。如果在main中，则之后再交由系统调用exit()。
+
+* return返回，可析构main或函数中的局部变量，尤其要注意局部对象，如不析构可能造成内存泄露。exit返回不析构main或函数中的局部变量，但执行收工函数，
+故可析构全局变量（对象）。abort不析构main或函数中的局部变量，也不执行收工函数，故全局和局部对象都不析构。
+  **所以，用return更能避免内存泄露，在C++中用abort和exit都不是好习惯。**
+
+### 2.返回错误代码
+### 3.异常机制
+### 4.将对象用作异常类型
+### 5.栈解开（栈解退）
+
 ## exception类
 ## RTTI
 ## 类型转换运算符
