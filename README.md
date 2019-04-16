@@ -936,7 +936,22 @@ bool QueueTP<Item>::dequeue(Item & item)
   **所以，用return更能避免内存泄露，在C++中用abort和exit都不是好习惯。**
 
 ### 2.返回错误代码
+一种比异常终止更灵活的方法是，使用函数的返回值来指出问题
 ### 3.异常机制
+* C++异常是对程序运行过程中发生的异常情况（例如被0除）的一种响应。异常提供了将控制权从程序的一个部分传递到另外一部分的途径
+* 异常机制由三个部分组成
+#### 1.引发异常
+```C++
+double hmean(double a,double b)
+{
+if(a==-b)
+throw "bad heam() arguments:a=-b not allowed";//throw关键字表示引发异常（实际上是跳转）
+return 2.0*a*b/(a+b);
+}
+```
+#### 2.使用异常处理程序（exception handler）来捕获异常
+#### 3.使用try块：try块标识其中特定异常可能会被激活的代码，它后面跟一个或多个的catch块
+
 ### 4.将对象用作异常类型
 ### 5.栈解开（栈解退）
 
