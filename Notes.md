@@ -958,6 +958,51 @@ return 2.0*a*b/(a+b);
 ```
 #### 2.使用异常处理程序（exception handler）来捕获异常
 #### 3.使用try块：try块标识其中特定异常可能会被激活的代码，它后面跟一个或多个的catch块
+* 例子：
+```C++
+#include <iostream>
+ 
+using std::cout;
+using std::cin;
+using std::cerr;
+ 
+int fun(int & a, int & b)
+{
+if(b == 0)
+{
+	throw "hello there have zero sorry\n"; //引发异常
+}
+return a / b;
+}
+ 
+int main()
+{
+	int a;
+	int b;
+	while(true)
+	{
+	cin >> a;
+	cin >> b;
+	
+	try //try里面是可能引发异常代码块
+	{
+	cout << " a / b = "<< fun(a,b) << "\n";
+	}
+	catch(const char *str)  接收异常,处理异常
+	{
+		cout << str;
+	cerr <<"除数为0\n"; //cerr不会到输出缓冲中 这样在紧急情况下也可以使用
+	}
+	}
+	system("pause");
+	return 1;
+}
+```
+> try:try块标识符其中特定的异常可能被激活的代码块,他后面跟一个或者多个catch块.
+
+> catch:类似于函数定义,但并不是函数定义,关键字catch表明这是给一个处理程序,里面的`const cahr* str`会接受throw传过来错误信息.
+
+> throw:抛出异常信息,类似于执行返回语句,因为它将终止函数的执行,但是它不是将控制权交给调用程序,而是导致程序沿着函数调用序列后退,知道找到包含try块的函数.
 
 ### 4.将对象用作异常类型
 ### 5.栈解开（栈解退）
