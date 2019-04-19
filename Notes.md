@@ -1090,5 +1090,6 @@ cout<<"Now Processing type"<<typeid(*pg).name()<<".\n";
  
  3.static_cast<type_name>(expression)
  
+ 
  4.reinterpret_cast<type_name>(expression)
  * 用于天生危险的类型转换。
