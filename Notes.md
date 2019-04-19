@@ -1,7 +1,7 @@
 # C++
 C++ Primer Plus(第六版)笔记
 ***
-## 1～4基础（1）
+## 1～4基础
 * **浮点运算**的速度通常比**整型运算**慢，
 > 对于**标量运算**float和double都不了没有明显差别
 
@@ -21,7 +21,42 @@ C++ Primer Plus(第六版)笔记
 > * 整数值(内存量及有无符号)： bool,char,signed char,unsigned char,short,unsigned short,int,unsigned int,long,unsigned long,(新)long long,unsigned long
 > * 浮点格式的值：float(32位),double(64位),long double（94～128位）
 * 复合类型：数组；字符串：1.字符数组char array 2.string类；结构：struct；共同体：union；枚举：enum；指针：int* ,long*
-###
+### 数组（array） 
+```C++
+short months[12];
+int yamcosts[3]={20,30.5};
+double earning[4]{1.2e4,1.6e4,1.4e4,1.7e4};
+float balances[100]{};//初始化全部元素值为0
+//字符串
+char boss[8]="Bozo"//后面四个元素为"\0"空字符
+```
+### using
+* using namespace XXX;这是指示
+> **引入名称空间内所有的名称**：将XXX名称空间，所有成员变成可见，作用域和using声明一致；例：`using namespace std;`
+* using XXX;这是声明
+> 引入名称空间或基类作用域内**已经被声明的名称**：一次只引入一个命名空间成员;`using std::cout;`
+### 类之于对象，类型之于变量
+对象和变量都是用来描述一段内存的。
+* **变量**更强调的是变量名这个符号的**含义**，更强调名字与内存的联系，而不必关注这段内存是什么类型，有多少字节长度，只关注这个**变量名a对应着某段内存**。
+* **而对象**的描述更强调的是**内存的类型而不在乎名字**，也就是说,从对象的角度看内存，就需要清除这段内存的字节长度等信息，而不是关注这个对象在代码中是否有一个变量名来引用这段内存。
+### struct结构
+* struct和class的区别
+>struct能包含成员函数吗？ 能！
+
+>struct能继承吗？ 能！！
+
+>struct能实现多态吗？ 能！！！
+
+既然这些它都能实现，那它和class还能有什么区别？
+最本质的一个区别就是默认的访问控制，体现在两个方面：**默认继承访问权限和默认成员访问权限**
+> * 1）默认的继承访问权限。struct是public的，class是private的。
+> * 2）struct作为数据结构的实现体，它默认的数据访问控制是public的，而class作为对象的实现体，它默认的成员变量访问控制是private的。
+* 做个总结，从上面的区别，我们可以看出，struct更适合看成是一个数据结构的实现体，class更适合看成是一个对象的实现体。
+
+
+
+
+
 
 ***
 ## 7～8函数（3）
