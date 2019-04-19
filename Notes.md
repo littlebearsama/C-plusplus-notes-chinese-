@@ -1054,8 +1054,41 @@ int main()
 
 C++有三个支持RTTI的元素
 
-> 1.如果可能
+> 1.如果可能的话，**dynamic_cast运算符**将使用一个指向**基类的指针**来生成**指向派生类**的指针；否则，该运算符返回0---空指针。
 
+> 2.typeid运算符返回指出对象类型的值
+
+> 3.type_info结构存储了有关特定类型的信息。
+
+* 1.dynamic_cast运算符是最常用的RTTI组件
+
+他不能回答“指针指向的是哪类对象”这样的问题，但能回答“是否可以安全地将对象的地址赋给特定类型的指针”这样的问题
+
+用法：`Superb* pm = dynamic_cast<Super*>(pg);`其中pg指向一个对象
+
+提出这样的问题：指针pg类型是否可被安全地转换为Super* ?如果可以返回对象地址，否则返回一个空指针。
+
+* 2.typeid运算符和type_info类。
+
+typeid运算符使得能够确定两个对象是否为同类型,使用：如果pg指向的是一个Magnification对象，则下述表达式的结果为bool值true，否则为false；
+```C++
+typeid(Magnification)==typeid(*pg)
+
+type_info类的实现岁厂商而异，但包含一个name()成员，该函数返回一个随实现而异的字符串；通常（但并非一定）是类的名称。例如下面的语句想爱你是指针pg指向的对象所属的类定义的字符串：
+```C++
+cout<<"Now Processing type"<<typeid(*pg).name()<<".\n";
+```
 
 ## 类型转换运算符
-
+ 4个类型转换运算符:`dynamic_cast\const_cast\static_cast\reinterpret_cast`
+ 
+ 1.dynamic_cast<type_name>(expression)
+ * 该运算符的用途是，使得能够在类层次结构中进行向上转换（由于is-a关系，这样的类型转换是安全的），不允许其他转换。
+ 
+ 2.const_cast<type_name>(expression)
+ * 该运算符用于执行只有一种用途的类型转换，即改变之const或volatile其语法与dynamic_cast运算符相同。
+ 
+ 3.static_cast<type_name>(expression)
+ 
+ 4.reinterpret_cast<type_name>(expression)
+ * 用于天生危险的类型转换。
