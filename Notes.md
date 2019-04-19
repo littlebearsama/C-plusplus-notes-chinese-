@@ -2,6 +2,26 @@
 C++ Primer Plus(第六版)笔记
 ***
 ## 1～4基础（1）
+* **浮点运算**的速度通常比**整型运算**慢，
+> 对于**标量运算**float和double都不了没有明显差别
+
+> 对于**适量运算**double比float慢得多
+
+* 运算符重载（operator overloading）：使用相同符号进行多种操作  
+> 1.C++内置重载 9/5 int  ； 9L/5L long ； 9.0/5.0 double ； 9.0f/5.0f float
+
+> 2.C++扩展运算符重载
+
+* int guess(3.9832);结果：guess=3; **将浮点float转换为整型int时，采用截取（丢弃小数部分），而不是四舍五入**
+* 将一个值赋值给取值范围更大的类型通常不会导致什么问题，只是占用的字节更多而已。
+* **列表初始化(使用大括号初始化)**不允许**窄缩（`float-->int`）**。
+* (long)thorn; long(thron);强制类型转换不会改变thorn变量本身，**而是创建一个新的，指定类型的值**。
+* auto让编译器能够根据初始值的类型推断变量的类型。
+* C++的基本类型
+> * 整数值(内存量及有无符号)： bool,char,signed char,unsigned char,short,unsigned short,int,unsigned int,long,unsigned long,(新)long long,unsigned long
+> * 浮点格式的值：float(32位),double(64位),long double（94～128位）
+* 复合类型：数组；字符串：1.字符数组char array 2.string类；结构：struct；共同体：union；枚举：enum；指针：int* ,long*
+###
 
 ***
 ## 7～8函数（3）
