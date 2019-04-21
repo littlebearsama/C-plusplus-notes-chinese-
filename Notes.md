@@ -316,10 +316,53 @@ rect_to_polar(&rplace,&pplace);
 调用函数时，将结构的地址（&pplace）而不是结构本身（pplace）传递给它；将形参声明为指向polar的指针，即`polar*`类型。由于函数不应该修改结构，因此使用了const修饰符，由于形参是指针不是结构，因此应使用姐姐成员运算符(**->**)，而不是成员运算符（.）。
 
 > * 3.按引传递用，传指针和传引用效率都高，一般主张是引用传递代码逻辑更加紧凑清晰。
-## 函数与string对象
-## 函数和array对喜爱那个
-## 递归
+## 递归---C++函数有一种有趣的特点--可以调用自己（除了main()）
+1.包含一个递归调用的递归
+```C++
+void recurs(argumentlist)
+{
+statement1
+if(test)
+recurs(arguments)
+statement2
+}
+```
+如果调用5次recurs就会运行5次statement1，运行1次statement2.
+
+2.包含多个递归调用的递归
+```C++
+void recurs(argumentlist)
+{
+if(test)
+return;
+statement;
+recurs(argumentlist1);
+recurs(argumentlist2);
+}
+```
+3.从1加到n
+```C++
+class Solution
+{
+public:
+int Sum_Solution(int n){
+int ans=n;
+ans&&(ans+=Sum_Solution(n-1));
+return ans;
+}
+};
+//&&就是逻辑与，逻辑与有个短路特点，前面为假，后面不计算。
+```
+
 ## 函数指针
+函数也有地址---存储其机器语言代码的内存的开始地址
+
+* 1.获取函数的地址，只要使用函数名（后面不跟参数）即可。
+> 例如think()是个函数
+```C++
+process(think);//传递的是地址
+thought(think());//传递的是函数返回值
+```
 ## 
 ***
 # 函数探幽
