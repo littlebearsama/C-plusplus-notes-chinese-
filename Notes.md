@@ -357,12 +357,36 @@ return ans;
 ## 函数指针
 函数也有地址---存储其机器语言代码的内存的开始地址
 
-* 1.获取函数的地址，只要使用函数名（后面不跟参数）即可。
+* 1. 获取函数的地址，只要使用函数名（后面不跟参数）即可。
 > 例如think()是个函数
 ```C++
 process(think);//传递的是地址
 thought(think());//传递的是函数返回值
+//使用
+double pam(int);//原始函数声明
+double (*pf)(int);//函数指针声明
+pf=pam;//使用指针指向pam函数
+
+double x=pam(4);//使用函数名调用pam()
+double y=(*pf)(5);//使用指针调用pam()
+//也可以这样使用函数指针
+double y=pf(5);
 ```
+* 2. 进阶
+下面函数原型的特征表和返回类型相同
+```C++
+const double *f1(const double ar[],int n);
+const double *f2(const dopuble [],int );
+const double *f3(const double *,int );
+//声明一个指针可以指向f1，f2，f3
+const double * (*p1)(const double *,int );//返回类型相同，函数的特征标相同
+//声明并初始化
+const double * (*p1)(const double *,int )=f1;
+//也可以使用自动类型推断
+auto p2=f2;
+```
+* 3. 使用for循环通过指针依次条用每个函数
+
 ## 
 ***
 # 函数探幽
