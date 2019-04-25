@@ -386,6 +386,15 @@ const double * (*p1)(const double *,int )=f1;
 auto p2=f2;
 ```
 * 3. 使用for循环通过指针依次条用每个函数
+> 例子：声明包含三个函数指针的数组，并初始化
+
+`const double * (*pa[3])(const double *,int)={f1,f2,f3};`
+
+问：为什么不使用自动类型推断？auto
+
+答：因为自动类型推断只能用于**单值初始化**，而不能用初始化列表。
+
+但可以声明相同类型的数组 auto pb=pa;
 
 ## 
 ***
