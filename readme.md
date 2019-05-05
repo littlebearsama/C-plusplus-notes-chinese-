@@ -1092,9 +1092,50 @@ int * p3=new(buffer) int[40];//调用new(40*sizeof(int),buffer)
 2. 类方法可以访问类的private组件。
 
 ```C++
+class Stock
+{
+      private:
+              char company[30];
+              int shares;
+              double share_val;
+              double total_val;
+              void set_tot(){total_val = shares * share_val;}
+      public:
+             Stock();              
+             Stock(const char * co , int n = 0 , double pr = 0.0);
+             ~Stock(){}
+             void buy(int num , double price);
+             void sell(int num , double price);
+             void update(double price);
+             void show() const;
+             const Stock & topval(const Stock & s) const;
+};
+```
+1. set_tot()只是实现代码的一种方式，而不是公有接口的组成部分，因此这个类将其声明为私有成员函数（即编写这个类的人可以使用它，但编写带来来使用这个类的人不能使用）。
+2. **内联方法**，
+* 其定义位于类声明中的函数都将自动成为内联函数。因此Stock::set_tot()是一个内联函数。
+* 在类声明之外定义内联函数
+```C++
+class Stock
+{
+private:
+...
+void set_tot();
+public:
+...
+};
+inline void Stock::set_tot(){
+total_val = shares * share_val;
+}
+```
+* 内联函数有特殊规则，**要求每个使用它们的文件都对其进行定义**。确保内联定义对多个文件程序中的所有文件都可用的最简便方法是：**将内联定义放在头文件中**
 
+3. 如何将类方法应用于对象？（对象，数据和成员函数）
+所创建的每个新对象都有自己的存储空间，用于存储其**内部变量**和**类成员**。但同一个类的所有对象共享一组类方法，即每种方法只有一个副本。
+***
 
 # 11使用类
+
 
 ***
 
