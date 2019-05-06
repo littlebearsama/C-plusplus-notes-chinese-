@@ -1,4 +1,5 @@
-除了C++ primer/C++ primer推荐四本C++书
+除了C++ Primer/C++ Primer Plus之外，还推荐四本C++书
+
 四本书籍：
 1. Effective C++中文版.pdf
 2. More Effective C++ 简体中文版（pdf 版）.pdf
