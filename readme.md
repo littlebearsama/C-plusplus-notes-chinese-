@@ -9,7 +9,7 @@ C++ Primer Plus(第六版)笔记
 * **浮点运算**的速度通常比**整型运算**慢，
 > 对于**标量运算**float和double都不了没有明显差别
 
-> 对于**适量运算**double比float慢得多
+> 对于**矢量运算**double比float慢得多
 
 * 运算符重载（operator overloading）：使用相同符号进行多种操作  
 > 1.C++内置重载 9/5 int  ； 9L/5L long ； 9.0/5.0 double ； 9.0f/5.0f float
