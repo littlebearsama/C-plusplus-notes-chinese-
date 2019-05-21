@@ -1,5 +1,7 @@
-作者github:[littlebearsama](https://github.com/littlebearsama)
-[链接](https://github.com/littlebearsama/C-plusplus-notes-chinese-/edit/master/readme.md)
+作者:[littlebearsama](https://github.com/littlebearsama)
+
+[文档链接](https://github.com/littlebearsama/C-plusplus-notes-chinese-/edit/master/readme.md)
+
 # C++
 C++ Primer Plus(第六版)笔记
 ***
