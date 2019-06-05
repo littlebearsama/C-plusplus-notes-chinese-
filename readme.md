@@ -1,6 +1,6 @@
 作者:[littlebearsama](https://github.com/littlebearsama)
 
-C++笔记博客版：[1—~10章](https://littlebearsama.github.io/tags/C/)
+C++笔记博客版：[分章](https://littlebearsama.github.io/tags/C/)
 
 # C++
 C++ Primer Plus(第六版)笔记
